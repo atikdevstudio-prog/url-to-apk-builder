@@ -26,14 +26,13 @@ jobs:
         sed -i "s|APP_NAME_PLACEHOLDER|$APP_NAME|g" app/src/main/res/values/strings.xml
         sed -i "s|WEB_URL_PLACEHOLDER|$TARGET_URL|g" app/src/main/res/values/strings.xml
 
-    - name: Grant Execute Permission for Gradle
-      run: chmod +x gradlew
-
-    - name: Build APK with Gradle
-      run: ./gradlew assembleDebug
+    - name: Build APK with Gradle Wrapper Action
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.client_payload.job_id }}.apk
+        name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk

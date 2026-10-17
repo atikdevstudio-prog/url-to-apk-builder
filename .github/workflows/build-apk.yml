@@ -18,9 +18,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Install Gradle
-      uses: gradle/actions/setup-gradle@v3
-
     - name: Update Strings with User Input
       run: |
         APP_NAME="${{ github.event.client_payload.app_name }}"
@@ -29,8 +26,10 @@ jobs:
         sed -i "s|APP_NAME_PLACEHOLDER|$APP_NAME|g" app/src/main/res/values/strings.xml
         sed -i "s|WEB_URL_PLACEHOLDER|$TARGET_URL|g" app/src/main/res/values/strings.xml
 
-    - name: Build APK with Gradle
-      run: gradle assembleDebug
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
